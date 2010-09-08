@@ -5,6 +5,17 @@ import scalate.ScalateSupport
 
 class SimpleServlet extends ScalatraServlet with ScalateSupport {
 
+  override protected def createTemplateEngine(config: Config) = {
+    import org.fusesource.scalate.{Binding, TemplateEngine}
+    import org.fusesource.scalate.layout.DefaultLayoutStrategy
+    import org.fusesource.scalate.servlet.{ServletResourceLoader, ServletRenderContext}
+    val te = new TemplateEngine with CreatesServletRenderContext
+    te.bindings = List(Binding("context", classOf[ServletRenderContext].getName, true, isImplicit = true))
+    te.resourceLoader = new ServletResourceLoader(getServletContext)
+    te.layoutStrategy = new DefaultLayoutStrategy(te, TemplateEngine.templateTypes.map("WEB-INF/scalate/layouts/default." + _):_*)
+    te
+  }
+
   before {contentType = "text/html"}
   
   get("/") { 
@@ -12,7 +23,7 @@ class SimpleServlet extends ScalatraServlet with ScalateSupport {
   }
   
   get("/time") {
-    templateEngine.layout("/WEB-INF/time.mustache", Map( "time" -> new java.util.Date ))
+    templateEngine.layout("/time.mustache", Map("time" -> new java.util.Date))
   }
   
   get("/hackers") {
@@ -21,7 +32,7 @@ class SimpleServlet extends ScalatraServlet with ScalateSupport {
       Map("name"->"kmizu","site"->"http://d.hatena.ne.jp/kmizushima/"),
       Map("name"->"yuroyoro","site"->"http://d.hatena.ne.jp/yuroyoro/")
     )
-    templateEngine.layout("/WEB-INF/hackers.mustache", Map( "list" -> hackers ))
+    templateEngine.layout("/hackers.mustache", Map( "list" -> hackers ))
   }
   
 }

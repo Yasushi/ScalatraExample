@@ -1,6 +1,6 @@
 import sbt._
 
-class ScalatraExampleProject(info: ProjectInfo) extends DefaultWebProject(info)
+class ScalatraExampleProject(info: ProjectInfo) extends AppengineProject(info) with net.stbbs.yasushi.ScalatePlugin
 {
   val scalaToolsSnapshots = "Scala Tools Repository" at "http://nexus.scala-tools.org/content/repositories/snapshots/"
   val sonatypeNexusSnapshots = "Sonatype Nexus Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
@@ -11,7 +11,7 @@ class ScalatraExampleProject(info: ProjectInfo) extends DefaultWebProject(info)
   val scalatra = "org.scalatra" %% "scalatra" % "2.0.0-SNAPSHOT"
   val scalatraScalate = "org.scalatra" %% "scalatra-scalate" % "2.0.0-SNAPSHOT"
 
-  val jetty6 = "org.mortbay.jetty" % "jetty" % "6.1.22" % "test"
-  val servletApi = "javax.servlet" % "servlet-api" % "2.5" % "provided"
+  val slf4j = "org.slf4j" % "slf4j-jdk14" % "1.6.1"
 
+  override def templateRoots = webappPath / "WEB-INF"
 }
